@@ -38,6 +38,7 @@ group :development, :test do
 end
 
 group :test do
+  gem 'shoulda'
   gem 'rspec-rails'
   gem 'capybara'
 end
