@@ -1,11 +1,8 @@
 class Restaurant < ActiveRecord::Base
 
-  has_many :reviews, dependent: :destroy do
-    def build_with_user(attributes = {}, user)
-      attributes[:user] ||= user
-      build(attributes)
-    end
-  end
+  has_many :reviews,
+      -> { extending WithUserAssociationExtension },
+      dependent: :destroy
 
   belongs_to :user
 
