@@ -3,15 +3,15 @@
     <h2> <%= link_to restaurant.name, restaurant_path(restaurant) %>
     </h2>
     <h3> <%= restaurant.description %> </h3>
-    <% restaurant.reviews.each do |review| %>
-      Rating: <%= review.rating %>
-      <br>
-      Thoughts: <%= review.thoughts %>
-      <p><%= pluralize review.endorsements.count, 'endorsement' %></p>
-      <br>
-      <%= link_to "Endorse Review", review_endorsements_path(review.id), method: :post %>
-      <br>
-    <% end %>
+    <ul>
+      <% restaurant.reviews.each do |review| %>
+        <li>
+          <%= review.thoughts %> <%= star_rating(restaurant.average_rating) %>
+          <%= link_to "Endorse", review_endorsements_path(review), class: 'endorsements-link' %>
+           <span class="endorsements_count"> <%= review.endorsements.count %> </span> <%= 'endorsement'.pluralize(review.endorsements.count) %>
+         </li>
+      <% end %>
+    </ul>
     <h3>Average rating: <%= star_rating(restaurant.average_rating)  %></h3>
     <br>
     <%= link_to "Edit #{restaurant.name}", edit_restaurant_path(restaurant) %>
