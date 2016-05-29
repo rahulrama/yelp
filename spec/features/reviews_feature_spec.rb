@@ -1,7 +1,7 @@
 feature 'reviewing' do
   before do
     sign_up
-    Restaurant.create name: 'KFC'
+    add_restaurant
   end
 
   scenario 'allows users to leave a review using a form' do
@@ -15,4 +15,14 @@ feature 'reviewing' do
      expect(page).to have_content('so so')
   end
 
+  scenario 'displays an average rating for all reviews' do
+    leave_review('So so', '3')
+    click_link 'Sign out'
+    sign_up(params = {
+      email: "test2@example.com",
+      password: "testtest",
+      password_confirmation: "testtest"})
+    leave_review('Great', '5')
+    expect(page).to have_content('Average rating: ★★★★☆')
+  end
 end

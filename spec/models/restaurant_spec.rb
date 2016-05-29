@@ -23,7 +23,34 @@ describe Restaurant, type: :model do
       it 'builds a review associated with the specified user' do
         expect(review.user).to eq user
       end
+
+      describe '#average_rating' do
+        context 'no reviews' do
+          it 'returns "N/A" when there are no reviews' do
+            restaurant = Restaurant.create(name: 'The Ivy')
+            expect(restaurant.average_rating).to eq 'N/A'
+          end
+        end
+      end
+
+      context '1 review' do
+        it 'returns that rating' do
+          restaurant = Restaurant.create(name: 'The Ivy')
+          restaurant.reviews.create(rating: 4)
+          expect(restaurant.average_rating).to eq 4
+        end
+      end
+
+      context 'multiple reviews' do
+        it 'returns the average' do
+          restaurant = Restaurant.create(name: 'The Ivy')
+          user1 = User.create(email: "test1@example.com", password:"testtest")
+          restaurant.reviews.create_with_user({rating: 1}, user1)
+          user2 = User.create(email: "test2@example.com", password:"testtest")
+          restaurant.reviews.create_with_user({rating: 5}, user2)
+          expect(restaurant.average_rating).to eq 3
+        end
+      end
     end
   end
-
 end

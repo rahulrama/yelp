@@ -1,8 +1,4 @@
-require 'with_user_association_extension'
-
 class RestaurantsController < ApplicationController
-
-  include WithUserAssociationExtension
 
   before_action :authenticate_user!, :except => [:index, :show]
   before_filter :has_permission, :only => [:edit, :update, :destroy]
@@ -49,7 +45,7 @@ class RestaurantsController < ApplicationController
 
   def has_permission
     if current_user != Restaurant.find(params[:id]).user
-      redirect_to root_path, alert: 'You are not authorised for that action on this restaurant'
+      redirect_to root_path, alert: 'You are not authorised to carry out that action on this restaurant'
     end
   end
 
