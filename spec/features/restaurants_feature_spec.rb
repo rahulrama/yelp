@@ -79,7 +79,7 @@ feature 'restaurants' do
 
   before do
     sign_up
-    Restaurant.create name: 'KFC', description: 'Deep fried goodness'
+    add_restaurant
   end
 
   scenario 'let a user edit a restaurant' do
@@ -98,7 +98,7 @@ end
 
     before do
       sign_up
-      Restaurant.create name: 'KFC', description: 'Deep fried goodness'
+      add_restaurant
     end
 
     scenario 'removes a restaurant when a user clicks a delete link' do

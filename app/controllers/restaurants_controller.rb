@@ -1,6 +1,11 @@
+require 'with_user_association_extension'
+
 class RestaurantsController < ApplicationController
 
+  include WithUserAssociationExtension
+
   before_action :authenticate_user!, :except => [:index, :show]
+  before_filter :has_permission, :only => [:edit, :update, :destroy]
 
   def index
     @restaurants = Restaurant.all
@@ -20,11 +25,13 @@ class RestaurantsController < ApplicationController
 
   def create
     @restaurant = Restaurant.create(restaurant_params)
+    @restaurant.user = current_user
+
     if @restaurant.save
-    redirect_to restaurants_path
-  else
-    render 'new'
-  end
+      redirect_to restaurants_path
+    else
+      render 'new'
+    end
   end
 
   def update
@@ -35,10 +42,15 @@ class RestaurantsController < ApplicationController
 
   def destroy
     @restaurant = Restaurant.find(params[:id])
-    @restaurant.reviews.destroy
     @restaurant.destroy
     flash[:notice] = "Restaurant deleted successfully"
     redirect_to restaurants_path
+  end
+
+  def has_permission
+    if current_user != Restaurant.find(params[:id]).user
+      redirect_to root_path, alert: 'You are not authorised for that action on this restaurant'
+    end
   end
 
   def restaurant_params
